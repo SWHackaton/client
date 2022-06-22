@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mockup/ui/dialog/smoothDialog.dart';
 import 'package:mockup/ui/page/main.dart';
 import 'package:mockup/ui/widget/bottomNavigationBar.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,35 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    bg.BackgroundGeolocation.onLocation((bg.Location location) {
+      print('[location] - $location');
+    }, (bg.LocationError error) { print(error); });
+    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
+      print('[motionchange] - $location');
+    });
+
+    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
+      print('[providerchange] - $event');
+    });
+
+    bg.BackgroundGeolocation.ready(bg.Config(
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 0,
+        locationUpdateInterval: 10000,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        debug: true,
+        logLevel: bg.Config.LOG_LEVEL_VERBOSE
+    )).then((bg.State state) {
+      if (!state.enabled) {
+        bg.BackgroundGeolocation.start();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
