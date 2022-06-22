@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
     provider = GeoLocationProvider();
     provider.open('location');
 
-    bg.BackgroundGeolocation.onLocation((bg.Location location) {
+    bg.BackgroundGeolocation.onLocation((bg.Location location) { // 추적될때마다 생성.
       geoLocation = GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude);
     }, (bg.LocationError error) { print(error); });
 
@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
         onPressed: () {
+          provider.insert(geoLocation);
           print(provider.get(2).then((value) => print(value.dateTime)));
           // createSmoothDialog(
           //     context,
