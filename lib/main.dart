@@ -38,13 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
   late GeoLocation geoLocation;
   @override
   void initState() {
-    print("나돌아가~~~!!!");
     super.initState();
     provider = GeoLocationProvider();
     provider.open('location');
 
     bg.BackgroundGeolocation.onLocation((bg.Location location) { // 추적될때마다 생성.
-      geoLocation = GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude);
+      provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
+      print(location);
     }, (bg.LocationError error) { print(error); });
 
     bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
@@ -86,20 +86,18 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
         onPressed: () {
-          provider.insert(geoLocation);
-          print(provider.get(2).then((value) => print(value.dateTime)));
-          // createSmoothDialog(
-          //     context,
-          //     "일기 추가 버튼 눌림",
-          //     const Text("TODO: 작업 추가"),
-          //     TextButton(
-          //       child: const Text("확인"),
-          //       onPressed: () async {
-          //         Navigator.pop(context);
-          //       },
-          //     ),
-          //     null,
-          //     false);
+          createSmoothDialog(
+              context,
+              "일기 추가 버튼 눌림",
+              const Text("TODO: 작업 추가"),
+              TextButton(
+                child: const Text("확인"),
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+              ),
+              null,
+              false);
         },
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 24, 29, 54),
