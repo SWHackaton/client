@@ -34,10 +34,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
+    print("나돌아가~~~!!!");
     super.initState();
     bg.BackgroundGeolocation.onLocation((bg.Location location) {
       print('[location] - $location');
     }, (bg.LocationError error) { print(error); });
+
     bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
       print('[motionchange] - $location');
     });
@@ -49,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 0,
-        locationUpdateInterval: 10000,
+        locationUpdateInterval: 10000, //10초에한번씩
         stopOnTerminate: false,
         startOnBoot: true,
         debug: true,
@@ -99,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomBottomNavigationBar(),
-      body: const MainPage(),
+      // body: const MainPage(),
     );
   }
 }
