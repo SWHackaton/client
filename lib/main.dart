@@ -1,5 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mockup/db/dao/location.dart';
+import 'package:mockup/db/dto/location.dart';
 import 'package:mockup/ui/dialog/smoothDialog.dart';
 import 'package:mockup/ui/page/main.dart';
 import 'package:mockup/ui/widget/bottomNavigationBar.dart';
@@ -32,11 +34,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late GeoLocationProvider provider;
+  late GeoLocation geoLocation;
   @override
   void initState() {
     super.initState();
+    provider = GeoLocationProvider();
+    provider.open('location');
+
     bg.BackgroundGeolocation.onLocation((bg.Location location) {
-      print('[location] - $location');
+      geoLocation = GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude);
     }, (bg.LocationError error) { print(error); });
     bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
       print('[motionchange] - $location');
@@ -59,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bg.BackgroundGeolocation.start();
       }
     });
+
   }
 
   @override
@@ -76,18 +84,19 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
         onPressed: () {
-          createSmoothDialog(
-              context,
-              "일기 추가 버튼 눌림",
-              const Text("TODO: 작업 추가"),
-              TextButton(
-                child: const Text("확인"),
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-              ),
-              null,
-              false);
+          print(provider.get(2).then((value) => print(value.dateTime)));
+          // createSmoothDialog(
+          //     context,
+          //     "일기 추가 버튼 눌림",
+          //     const Text("TODO: 작업 추가"),
+          //     TextButton(
+          //       child: const Text("확인"),
+          //       onPressed: () async {
+          //         Navigator.pop(context);
+          //       },
+          //     ),
+          //     null,
+          //     false);
         },
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 24, 29, 54),
