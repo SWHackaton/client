@@ -38,13 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
   late GeoLocation geoLocation;
   @override
   void initState() {
+    print("나돌아가~~~!!!");
     super.initState();
     provider = GeoLocationProvider();
     provider.open('location');
 
-    bg.BackgroundGeolocation.onLocation((bg.Location location) {
+    bg.BackgroundGeolocation.onLocation((bg.Location location) { // 추적될때마다 생성.
       geoLocation = GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude);
     }, (bg.LocationError error) { print(error); });
+
     bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
       print('[motionchange] - $location');
     });
@@ -56,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 0,
-        locationUpdateInterval: 10000,
+        locationUpdateInterval: 10000, //10초에한번씩
         stopOnTerminate: false,
         startOnBoot: true,
         debug: true,
@@ -84,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
         onPressed: () {
+          provider.insert(geoLocation);
           print(provider.get(2).then((value) => print(value.dateTime)));
           // createSmoothDialog(
           //     context,
@@ -108,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const CustomBottomNavigationBar(),
-      body: const MainPage(),
+      // body: const MainPage(),
     );
   }
 }
