@@ -150,26 +150,50 @@ class _MainPageState extends State<MainPage> {
         ),
         contents: Container(
           padding: const EdgeInsets.only(top: 16, bottom: 16),
-          child: GestureDetector(
-            onTap: () {
-              if (storeName == null) {
-
-              } else {
-
-              }
-              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailView(storeName, storeAddr, latitude, longitude)));
-            },
+          child: InkWell(
             child: Card(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(storeName ?? "장소가 아직 선택되지 않았습니다."),
-                  Text(storeAddr)
-                ],
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(storeName ?? emptyData),
+                    Text(storeAddr)
+                  ],
+                ),
               ),
             ),
-          ),)
+            onTap: (){
+              print(textData);
+              if(textData == ""){
+                AlertDialog dialog = AlertDialog(
+                  title: Text("Select"),
+                  content: DropdownButton(
+                      hint: Text('선택해주세요'),
+                      value: _selectedValue,
+                      items: _valueList.map((value) {
+                        return DropdownMenuItem(
+                            value: value,
+                            child: Text(value));
+                      }).toList(),
+                      onChanged: (value) {
+                        print(value);
+                        setState(() {
+                          _selectedValue = value;
+                          textData = value;
+                          storeName = value;
+                          emptyData = value;
+                        });
+                        Navigator.of(context).pop();
+                      }),
+                );
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => dialog);
+              }else
+              {Navigator.push(context,MaterialPageRoute(builder: (context) => DetailView()));}
+            },
+          ),
+
         ),
         node: const TimelineNode(
           indicator: DotIndicator(),
