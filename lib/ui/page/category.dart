@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class CategoriesPage extends StatefulWidget {
-  const CategoriesPage({Key? key}) : super(key: key);
+class CategoryPage extends StatefulWidget {
+  const CategoryPage({Key? key}) : super(key: key);
 
   @override
-  State<CategoriesPage> createState() => _CategoriesPageState();
+  State<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _CategoryPageState extends State<CategoryPage> {
   // TextEditingController searchData!;
 
   @override
