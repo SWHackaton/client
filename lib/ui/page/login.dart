@@ -42,7 +42,8 @@ class _LoginState extends State<Login> {
           TextButton(
             child: const Text("확인"),
             onPressed: () async {
-              Navigator.pop(context);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
           ),
           null,
@@ -55,8 +56,6 @@ class _LoginState extends State<Login> {
       print(await secureStorage.read(key: KEY_KAKAO_REFRESH_TOKEN));
       print(await secureStorage.read(key: KEY_KAKAO_REFRESH_TOKEN_EXPIERS_AT));
       print(await secureStorage.read(key: KEY_KAKAO_SCOPES));
-
-      Navigator.of(context).pop();
     } catch (error) {
       print(error.toString());
       createSmoothDialog(
