@@ -27,4 +27,3 @@ class GeoLocation {
     longitude = map[columnLon];
   }
 }
-
