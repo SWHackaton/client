@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:mockup/api/location.dart';
 import 'package:mockup/ui/page/detail-view.dart';
 import 'package:timelines/timelines.dart';
-import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -18,6 +16,11 @@ class _MainPageState extends State<MainPage> {
   var myColor = Colors.black;
   List<bool> _selections1 = List.generate(2, (index) => false);
   TextEditingController _textEditController = TextEditingController();
+  final _valueList = ["식당","은행","노래방","카페","마트"];
+  var _selectedValue;
+  dynamic textData = "";
+  dynamic emptyData = "[장소를 선택해 주세요]";
+  // enum MenuType { first, second, third }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +81,7 @@ class _MainPageState extends State<MainPage> {
       return TimelineTile(
         nodePosition: 0.3,
         nodeAlign: TimelineNodeAlign.basic,
-        oppositeContents: Container(
+        oppositeContents: SizedBox(
           height: 70,
           // color: Colors.red,
           child: Column(
@@ -95,54 +98,49 @@ class _MainPageState extends State<MainPage> {
                           setState(() {
                             if (myColor == Colors.black) {
                               myColor = Colors.pinkAccent;
-                            } else
+                            } else {
                               myColor = Colors.black;
+                            }
                           });
                         },
                         icon: Icon(Icons.favorite, color: myColor)),
                     ElevatedButton(
-                      child: Text("add"),
                       style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 24, 29, 54),
-                          minimumSize: Size(50, 20)),
+                          primary: const Color.fromARGB(255, 24, 29, 54),
+                          minimumSize: const Size(50, 20)),
                       onPressed: () {
                         AlertDialog dialog = AlertDialog(
-                          title: Text("Memo"),
+                          title: const Text("Memo"),
                           content: TextField(
                               controller: _textEditController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.deepPurple)
-                                ),
-                                labelText: '장소, 버스, 지하철, 도로 등 검색',
-                              )
-                          ),
+                                    borderSide:
+                                        BorderSide(color: Colors.deepPurple)),
+                                labelText: '메모장.',
+                              )),
                           actions: [
                             ElevatedButton(
-                              child: Text("저장"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(
-                                      220, 24, 29, 54)),
+                                  primary: Color.fromARGB(220, 24, 29, 54)),
                             ),
                             ElevatedButton(
-                              child: Text("취소"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(
-                                      220, 24, 29, 54)),
+                                  primary: Color.fromARGB(220, 24, 29, 54)),
                             ),
                           ],
                         );
                         showDialog(
                             context: context,
-                            builder: (BuildContext context) =>
-                            dialog);
+                            builder: (BuildContext context) => dialog);
                       },
+                      child: const Text("add"),
                     )
                   ],
                 ),
@@ -194,7 +192,8 @@ class _MainPageState extends State<MainPage> {
                   Container(
                     padding: const EdgeInsets.only(bottom: 5),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 24, 29, 54)),
+                      style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(255, 24, 29, 54)),
                       onPressed: () {
                         _selectTime(context, "날짜를 선택하세요.");
                       },
@@ -207,41 +206,18 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           Expanded(
-            child: FutureBuilder(
-                future: getTimeLine(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData == false) {
-                    return CircularProgressIndicator();
-                  }
-                  else if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Error: ${snapshot.error}',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    );
-                  }
-                  // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-                  else {
-                    return ListView.builder(
-                        itemCount: snapshot.data.length,
-                        scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          var timeline = snapshot.data[index];
-                          var storeName = timeline['visit']['store_name'];
-                          String storeStart = timeline['visit']['start_datetime'];
-                          String storeEnd = timeline['visit']['end_datetime'];
-                          String storeTime = storeStart.substring(11, 16) + " - " + storeEnd.substring(11, 16);
-                          String storeAddr = timeline['address']['addr'];
-                          double longitude = timeline['address']['longitude'];
-                          double latitude = timeline['address']['latitude'];
-                          if (index == 0) {
-                            return Column(
+              child: FutureBuilder(
+                  future: getTimeLine(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData == false) {
+                      return Center(
+                        child: Column(
+                          children: [
+                            Wrap(
                               children: [
-                                const SizedBox(
-                                  height: 16,
+                                Container(
+                                  margin: const EdgeInsets.only(top: 16),
+                                  child: const CircularProgressIndicator(),
                                 ),
                                 startTile(),
                                 createTime(storeTime, storeName, storeAddr, latitude, longitude)
@@ -270,7 +246,8 @@ class _MainPageState extends State<MainPage> {
   }
 
   dynamic getTimeLine() async {
-    return await client.getLastTimeStamp('user01', "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+    return await client.getLastTimeStamp('user02',
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
   }
 
   void _selectTime(BuildContext context, String title) async {
