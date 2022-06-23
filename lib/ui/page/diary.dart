@@ -14,12 +14,12 @@ class _DiaryState extends State<Diary> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("날짜"),
+          title: const Text("날짜"),
           foregroundColor: NeumorphicColors.defaultTextColor,
           backgroundColor: NeumorphicColors.background,
         ),
         body: Container(
-          color: Colors.white,
+          color: NeumorphicColors.background,
           width: double.infinity,
           alignment: Alignment.topLeft,
           child: Padding(
@@ -28,7 +28,7 @@ class _DiaryState extends State<Diary> {
               // mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  color: Color.fromARGB(255, 24, 29, 54),
+                  color: const Color.fromARGB(255, 24, 29, 54),
                   width: 5,
                   height: double.infinity,
                 ),
@@ -45,12 +45,12 @@ class _DiaryState extends State<Diary> {
                           padding: const EdgeInsets.only(left: 10),
                           child: Container(
                               alignment: Alignment.topLeft,
-                              child: Text(
+                              child: const Text(
                                 "제목",
                                 style: TextStyle(fontSize: 20),
                               )),
                         ),
-                        TextField(
+                        const TextField(
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 10),
                           ),
@@ -59,12 +59,12 @@ class _DiaryState extends State<Diary> {
                           padding: const EdgeInsets.only(left: 10, top: 10),
                           child: Container(
                               alignment: Alignment.topLeft,
-                              child: Text(
+                              child: const Text(
                                 "내용",
                                 style: TextStyle(fontSize: 20),
                               )),
                         ),
-                        TextField(
+                        const TextField(
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 10),
                           ),

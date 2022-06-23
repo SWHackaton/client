@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:mockup/api/location.dart';
 import 'package:mockup/ui/page/detailView.dart';
 import 'package:timelines/timelines.dart';
-import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -37,8 +35,7 @@ class _MainPageState extends State<MainPage> {
           child: Container(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DetailView())),
+              onTap: () => {},
               child: Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -85,7 +82,7 @@ class _MainPageState extends State<MainPage> {
       return TimelineTile(
         nodePosition: 0.3,
         nodeAlign: TimelineNodeAlign.basic,
-        oppositeContents: Container(
+        oppositeContents: SizedBox(
           height: 70,
           // color: Colors.red,
           child: Column(
@@ -98,25 +95,23 @@ class _MainPageState extends State<MainPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.favorite, color: myColor),
-                      onPressed: () {
-                        setState(() {
-                          if (myColor == Colors.black) {
-                            myColor = Colors.pinkAccent;
-                          } else
-                            myColor = Colors.black;
-                        });
-                      },
-                    ),
+                        onPressed: () {
+                          setState(() {
+                            if (myColor == Colors.black) {
+                              myColor = Colors.pinkAccent;
+                            } else {
+                              myColor = Colors.black;
+                            }
+                          });
+                        },
+                        icon: Icon(Icons.favorite, color: myColor)),
                     ElevatedButton(
-                      child: Icon(Icons.note,
-                          color: Color.fromARGB(255, 24, 29, 54), size: 30),
-                      // child: Text("add"),
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.white10, minimumSize: Size(25, 30)),
+                          primary: const Color.fromARGB(255, 24, 29, 54),
+                          minimumSize: const Size(50, 20)),
                       onPressed: () {
                         AlertDialog dialog = AlertDialog(
-                          title: Text("Memo"),
+                          title: const Text("Memo"),
                           content: TextField(
                               controller: _textEditController,
                               decoration: const InputDecoration(
@@ -127,7 +122,6 @@ class _MainPageState extends State<MainPage> {
                               )),
                           actions: [
                             ElevatedButton(
-                              child: Text("저장"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -135,7 +129,6 @@ class _MainPageState extends State<MainPage> {
                                   primary: Color.fromARGB(220, 24, 29, 54)),
                             ),
                             ElevatedButton(
-                              child: Text("취소"),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -148,6 +141,7 @@ class _MainPageState extends State<MainPage> {
                             context: context,
                             builder: (BuildContext context) => dialog);
                       },
+                      child: const Text("add"),
                     )
                   ],
                 ),
@@ -240,13 +234,26 @@ class _MainPageState extends State<MainPage> {
                   future: getTimeLine(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData == false) {
-                      return CircularProgressIndicator();
+                      return Center(
+                        child: Column(
+                          children: [
+                            Wrap(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(top: 16),
+                                  child: const CircularProgressIndicator(),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      );
                     } else if (snapshot.hasError) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Error: ${snapshot.error}',
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       );
                     }
@@ -262,9 +269,8 @@ class _MainPageState extends State<MainPage> {
                             String storeStart =
                                 timeline['visit']['start_datetime'];
                             String storeEnd = timeline['visit']['end_datetime'];
-                            String storeTime = storeStart.substring(11, 16) +
-                                " - " +
-                                storeEnd.substring(11, 16);
+                            String storeTime =
+                                "${storeStart.substring(11, 16)} - ${storeEnd.substring(11, 16)}";
                             String storeAddr = timeline['address']['addr'];
                             double longitude = timeline['address']['longitude'];
                             double latitude = timeline['address']['latitude'];
