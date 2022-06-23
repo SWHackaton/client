@@ -33,6 +33,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-       <data android:scheme="kakao7a8c6dda31f8b37746726b69d7a4cc4a" android:host="oauth"/>
+<!--       <data android:scheme="kakao7a8c6dda31f8b37746726b69d7a4cc4a" android:host="oauth"/>-->
     </application>
 </manifest>
