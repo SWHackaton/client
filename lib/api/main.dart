@@ -9,8 +9,8 @@ class APIClient extends BaseClient {
   };
   final Client _client = Client();
 
-  // static const String baseURL = 'http://118.67.131.34';
-  static const String baseURL = 'http://127.0.0.1:8080';
+  static const String baseURL = 'http://118.67.131.34';
+  // static const String baseURL = 'http://127.0.0.1:8080';
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
