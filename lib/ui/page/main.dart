@@ -55,28 +55,27 @@ class _MainPageState extends State<MainPage> {
                     color: NeumorphicColors.background,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: const [
-                          Text("오늘의 시작"),
-                        ],
-                    child: InkWell(
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=>DetailView())),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: const [
-                            Text("오늘의 시작"),
-                          ],
+                      child: InkWell(
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (context)=>DetailView())),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: const [
+                              Text("오늘의 시작"),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                   node: const TimelineNode(
-                    indicator: DotIndicator(),
-                    endConnector: SolidLineConnector(),
-                  ),
+                  indicator: DotIndicator(),
+                  startConnector: SolidLineConnector(),
+                  endConnector: SolidLineConnector(),
                 ),
+                ),
+
                 TimelineTile(
                   nodePosition: 0.3,
                   nodeAlign: TimelineNodeAlign.basic,

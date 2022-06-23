@@ -3,7 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart';
 import 'package:mockup/api/store.dart';
 
-import 'listView.dart';
+import 'category-list.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
@@ -53,7 +53,10 @@ class _CategoryPageState extends State<CategoryPage> {
                     print("submit text: $text");
                     var response = await client.getSearchResult(text);
                     print(response);
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView(text, response['result'], Icon(Icons.directions_bus_rounded,
+                        size: 50,
+                        color: Color.fromARGB(200, 24, 29, 54))
+                    )));
                   },
                 ),
 
@@ -84,12 +87,11 @@ class _CategoryPageState extends State<CategoryPage> {
                             color: Colors.grey,
                           ),
                           child: NeumorphicButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MyListView(),));
-                            },
                             onPressed: () async {
                               var response = await client.getSelectCategory('meal');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('식사', response['result'], Icon(Icons.dinner_dining,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54)))));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -119,7 +121,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('drink');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('음료', response['result'], Icon(Icons.emoji_food_beverage,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54)
+                              ))));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -149,7 +154,9 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('shopping');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('쇼핑', response['result'], Icon(Icons.shopping_cart,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54)))));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +192,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('culture');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('문화', response['result'], Icon(Icons.home_work_outlined,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54))
+                              )));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +225,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('travel');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('관광', response['result'], Icon(Icons.tour,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54))
+                              )));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -245,7 +258,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('hotel');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('호텔', response['result'], Icon(Icons.hotel,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54))
+                              )));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -281,7 +297,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('subway');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('지하철', response['result'], Icon(Icons.subway,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54))
+                              )));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -311,7 +330,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('bus');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('지하철', response['result'], Icon(Icons.directions_bus_rounded,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54))
+                              )));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -341,7 +363,10 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: NeumorphicButton(
                             onPressed: () async {
                               var response = await client.getSelectCategory('airplane');
-                              print(response);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryListView('지하철', response['result'], Icon(Icons.local_airport,
+                                  size: 50,
+                                  color: Color.fromARGB(200, 24, 29, 54))
+                              )));
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
