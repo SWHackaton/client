@@ -91,19 +91,6 @@ class _MainPageState extends State<MainPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // ToggleButtons(
-                    //   children: <Widget>[
-                    //     Icon(Icons.ac_unit),
-                    //     Icon(Icons.call),
-                    //   ],
-                    //   onPressed: (int index) {
-                    //     setState(() {
-                    //       _selections1[index] = !_selections1[index];
-                    //     });
-                    //   },
-                    //   isSelected: _selections1,
-                    // ),
-
                     IconButton(
                         onPressed: () {
                           setState(() {
