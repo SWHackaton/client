@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:mockup/api/location.dart';
 import 'package:mockup/db/dao/location.dart';
 import 'package:mockup/db/dto/location.dart';
 import 'package:mockup/ui/dialog/smoothDialog.dart';
@@ -8,57 +11,67 @@ import 'package:mockup/ui/widget/bottomNavigationBar.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FootPrint());
+  KakaoSdk.init(nativeAppKey: '7a8c6dda31f8b37746726b69d7a4cc4a');
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class FootPrint extends StatelessWidget {
+  const FootPrint({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const title = "Foot Print";
     return const NeumorphicApp(
-      title: 'Foot Print',
-      home: MyHomePage(title: 'Foot Print'),
+      title: title,
+      home: FootPrintPage(title: title),
       darkTheme: neumorphicDefaultTheme,
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class FootPrintPage extends StatefulWidget {
+  const FootPrintPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<FootPrintPage> createState() => _FootPrintPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  late GeoLocationProvider provider;
-  late GeoLocation geoLocation;
+class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProviderStateMixin {
+  late TabController controller;
+  GeoLocationProvider provider = GeoLocationProvider();
+
   @override
   void initState() {
+    controller = TabController(length: 4, vsync: this);
     super.initState();
-    provider = GeoLocationProvider();
-    provider.open('location');
+    setupDataBase();
+    setGeoLocationConfig();
+  }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void setupDataBase() async {
+    await provider.open('location');
+  }
+
+  void setGeoLocationConfig() {
     bg.BackgroundGeolocation.onLocation((bg.Location location) { // 추적될때마다 생성.
-      provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
-      print(location);
+      if (provider.db.isOpen) {
+        provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
+      }
     }, (bg.LocationError error) { print(error); });
 
-    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
-      print('[motionchange] - $location');
-    });
-
-    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
-      print('[providerchange] - $event');
-    });
 
     bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 0,
-        locationUpdateInterval: 10000, //10초에한번씩
+        locationUpdateInterval: 1000 * 60, //10초에한번씩
         stopOnTerminate: false,
         startOnBoot: true,
         debug: true,
@@ -68,11 +81,14 @@ class _MyHomePageState extends State<MyHomePage> {
         bg.BackgroundGeolocation.start();
       }
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
+    EdgeInsets systemPadding =
+        MediaQuery.of(context).viewPadding;
+    double viewHeight =
+        (MediaQuery.of(context).size.height - (systemPadding.top)) * 0.1;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -85,19 +101,22 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
-        onPressed: () {
-          createSmoothDialog(
-              context,
-              "일기 추가 버튼 눌림",
-              const Text("TODO: 작업 추가"),
-              TextButton(
-                child: const Text("확인"),
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-              ),
-              null,
-              false);
+        onPressed: () async {
+          LocationClient client = LocationClient();
+          var response = await client.getAddress();
+          print(response);
+          // createSmoothDialog(
+              // context,
+              // "일기 추가 버튼 눌림",
+              // const Text("TODO: 작업 추가"),
+              // TextButton(
+              //   child: const Text("확인"),
+              //   onPressed: () async {
+              //     Navigator.pop(context);
+              //   },
+              // ),
+              // null,
+              // false);
         },
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 24, 29, 54),
@@ -107,9 +126,64 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Colors.white,
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: const CustomBottomNavigationBar(),
-      // body: const MainPage(),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.miniCenterDocked,
+      bottomNavigationBar: Stack(
+        alignment: const FractionalOffset(.5, 1.0),
+        children: [
+          Container(
+            height: viewHeight,
+            color: const Color.fromARGB(255, 24, 29, 54),
+            child: SafeArea(
+              child: TabBar(
+                indicatorColor: Colors.white,
+                tabs: const <Tab>[
+                Tab(
+                  icon: Icon(Icons.person_add, color: Colors.white),
+                ),
+                  Tab(
+                      icon: Icon(
+                        Icons.directions_run,
+                        color: Colors.white,
+                      )),
+                  Tab(
+                    icon: Icon(Icons.edit_note, color: Colors.white),
+                  ),
+                  Tab(
+                    icon: Icon(Icons.ac_unit, color: Colors.white),
+                  ),
+                ],
+                controller: controller,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: controller,
+        children: [
+          const MainPage(),
+          Container(
+            color: Colors.green,
+            child: const Center(
+              child: Text("Page 2"),
+            ),
+          ),
+          Container(
+            color: Colors.grey,
+            child: const Center(
+              child: Text("Page 3"),
+            ),
+          ),
+          Container(
+            color: Colors.red,
+            child: const Center(
+              child: Text("Page 4"),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
