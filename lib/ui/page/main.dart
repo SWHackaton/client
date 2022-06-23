@@ -14,8 +14,13 @@ class _MainPageState extends State<MainPage> {
   DateTime selectedDate = DateTime.now();
   LocationClient client = LocationClient();
   var myColor = Colors.black;
-  final List<bool> _selections1 = List.generate(2, (index) => false);
-  final TextEditingController _textEditController = TextEditingController();
+  List<bool> _selections1 = List.generate(2, (index) => false);
+  TextEditingController _textEditController = TextEditingController();
+  final _valueList = ["식당","은행","노래방","카페","마트"];
+  var _selectedValue;
+  dynamic textData = "";
+  dynamic emptyData = "[장소를 선택해 주세요]";
+  // enum MenuType { first, second, third }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +35,7 @@ class _MainPageState extends State<MainPage> {
           child: Container(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const DetailView())),
+              onTap: () => {},
               child: Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -114,7 +118,7 @@ class _MainPageState extends State<MainPage> {
                                 border: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.deepPurple)),
-                                labelText: '장소, 버스, 지하철, 도로 등 검색',
+                                labelText: '메모장.',
                               )),
                           actions: [
                             ElevatedButton(
@@ -122,18 +126,14 @@ class _MainPageState extends State<MainPage> {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary:
-                                      const Color.fromARGB(220, 24, 29, 54)),
-                              child: const Text("저장"),
+                                  primary: Color.fromARGB(220, 24, 29, 54)),
                             ),
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary:
-                                      const Color.fromARGB(220, 24, 29, 54)),
-                              child: const Text("취소"),
+                                  primary: Color.fromARGB(220, 24, 29, 54)),
                             ),
                           ],
                         );
@@ -151,16 +151,48 @@ class _MainPageState extends State<MainPage> {
         ),
         contents: Container(
           padding: const EdgeInsets.only(top: 16, bottom: 16),
-          child: Card(
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(storeName ?? "장소가 아직 선택되지 않았습니다."),
-                  Text(storeAddr)
-                ],
+          child: InkWell(
+            child: Card(
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(storeName ?? emptyData),
+                    Text(storeAddr)
+                  ],
+                ),
               ),
             ),
+            onTap: (){
+              print(textData);
+              if(textData == ""){
+                AlertDialog dialog = AlertDialog(
+                  title: Text("Select"),
+                  content: DropdownButton(
+                      hint: Text('선택해주세요'),
+                      value: _selectedValue,
+                      items: _valueList.map((value) {
+                        return DropdownMenuItem(
+                            value: value,
+                            child: Text(value));
+                      }).toList(),
+                      onChanged: (value) {
+                        print(value);
+                        setState(() {
+                          _selectedValue = value;
+                          textData = value;
+                          storeName = value;
+                          emptyData = value;
+                        });
+                        Navigator.of(context).pop();
+                      }),
+                );
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => dialog);
+              }else
+                {Navigator.push(context,MaterialPageRoute(builder: (context) => DetailView()));}
+            },
           ),
         ),
         node: const TimelineNode(
@@ -185,7 +217,7 @@ class _MainPageState extends State<MainPage> {
                     padding: const EdgeInsets.only(bottom: 5),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          primary: const Color.fromARGB(255, 24, 29, 54)),
+                          primary: Color.fromARGB(255, 24, 29, 54)),
                       onPressed: () {
                         _selectTime(context, "날짜를 선택하세요.");
                       },
