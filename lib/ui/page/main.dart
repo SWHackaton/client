@@ -125,14 +125,14 @@ class _MainPageState extends State<MainPage> {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(220, 24, 29, 54)),
+                                  primary: Color.fromARGB(220, 24, 29, 54)), child: null,
                             ),
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(220, 24, 29, 54)),
+                                  primary: Color.fromARGB(220, 24, 29, 54)), child: null,
                             ),
                           ],
                         );
@@ -205,41 +205,64 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
           ),
-          Expanded(
-              child: FutureBuilder(
-                  future: getTimeLine(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData == false) {
-                      return Center(
-                        child: Column(
+      Expanded(
+        child: FutureBuilder(
+            future: getTimeLine(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData == false) {
+                return CircularProgressIndicator();
+              }
+              else if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                );
+              }
+              // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+              else {
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      var timeline = snapshot.data[index];
+                      var storeName = timeline['visit']['store_name'];
+                      String storeStart = timeline['visit']['start_datetime'];
+                      String storeEnd = timeline['visit']['end_datetime'];
+                      String storeTime = storeStart.substring(11, 16) + " - " + storeEnd.substring(11, 16);
+                      String storeAddr = timeline['address']['addr'];
+                      double longitude = timeline['address']['longitude'];
+                      double latitude = timeline['address']['latitude'];
+                      if (index == 0) {
+                        return Column(
                           children: [
-                            Wrap(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(top: 16),
-                                  child: const CircularProgressIndicator(),
-                                ),
-                                startTile(),
-                                createTime(storeTime, storeName, storeAddr, latitude, longitude)
-                              ],
-                            );
-                          }
-                          else if (index == snapshot.data.length - 1) {
-                            return Column(
-                              children: [
-                                createTime(storeTime, storeName, storeAddr, latitude, longitude),
-                                endTile(),
-                                const SizedBox(height: 32),
-                              ],
-                            );
-                          } else {
-                            return createTime(storeTime, storeName, storeAddr, latitude, longitude);
-                          }
-                        }
-                    );
-                  }
-                })
-          ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            startTile(),
+                            createTime(storeTime, storeName, storeAddr, latitude, longitude)
+                          ],
+                        );
+                      }
+                      else if (index == snapshot.data.length - 1) {
+                        return Column(
+                          children: [
+                            createTime(storeTime, storeName, storeAddr, latitude, longitude),
+                            endTile(),
+                            const SizedBox(height: 32),
+                          ],
+                        );
+                      } else {
+                        return createTime(storeTime, storeName, storeAddr, latitude, longitude);
+                      }
+                    }
+                );
+              }
+            })
+      )
         ],
       ),
     );
