@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>KAKAO_APP_KEY</key>
+	<string>7a8c6dda31f8b37746726b69d7a4cc4a</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.transistorsoft.fetch</string>
@@ -26,10 +28,27 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakao7a8c6dda31f8b37746726b69d7a4cc4a</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Always/When in use description</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>When in use description</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion usage description</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -54,11 +73,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSMotionUsageDescription</key>
-	<string>Motion usage description</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>When in use description</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Always/When in use description</string>
 </dict>
 </plist>

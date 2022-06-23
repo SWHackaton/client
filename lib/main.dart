@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:mockup/api/location.dart';
 import 'package:mockup/db/dao/location.dart';
 import 'package:mockup/db/dto/location.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 
 void main() {
   runApp(const FootPrint());
-  KakaoSdk.init(nativeAppKey: '7a8c6dda31f8b37746726b69d7a4cc4a');
 }
 
 class FootPrint extends StatelessWidget {
