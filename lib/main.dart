@@ -1,19 +1,41 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mockup/api/location.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:mockup/db/dao/location.dart';
 import 'package:mockup/db/dto/location.dart';
-import 'package:mockup/ui/dialog/smoothDialog.dart';
-import 'package:mockup/ui/page/diary.dart';
-import 'package:mockup/ui/page/main.dart';
 import 'package:mockup/ui/page/category.dart';
-import 'package:mockup/ui/widget/bottomNavigationBar.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+import 'package:mockup/ui/page/diary.dart';
+import 'package:mockup/ui/page/login.dart';
+import 'package:mockup/ui/page/main.dart';
 
 void main() {
+  KakaoSdk.init(
+      javaScriptAppKey: "46ab0bf9a4ca217252f64b8471259e54",
+      nativeAppKey: "7a8c6dda31f8b37746726b69d7a4cc4a");
   runApp(const FootPrint());
 }
+
+const secureStorage = FlutterSecureStorage();
+FlutterSecureStorage getFlutterSecureStorage() {
+  return secureStorage;
+}
+
+const String KEY_KAKAO_AUTH_CODE = "kakaoLoginAuthCode";
+const String KEY_KAKAO_ACCES_TOKEN = "KakaoAccessToken";
+const String KEY_KAKAO_EXPIERS_AT = "KakaoExpiresAt";
+const String KEY_KAKAO_ID_TOKEN = "KakaoIdToken";
+const String KEY_KAKAO_REFRESH_TOKEN = "KakaoRefreshToken";
+const String KEY_KAKAO_REFRESH_TOKEN_EXPIERS_AT = "KakaoRefreshTokenExpiresAt";
+const String KEY_KAKAO_SCOPES = "KakaoScopes";
+
+///
+/// *** 중요 ***
+/// TODO: 앱 실행시 secureStorage에서 로그인값이 유효하다면 자동 로그인, 유효하지 않다몬 로그인 페이지로 넘길것
+/// *** 중요 ***
+///
 
 class FootPrint extends StatelessWidget {
   const FootPrint({Key? key}) : super(key: key);
@@ -21,6 +43,9 @@ class FootPrint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const title = "Foot Print";
+    AndroidOptions _getAndroidOptions() => const AndroidOptions(
+          encryptedSharedPreferences: true,
+        );
     return const NeumorphicApp(
       title: title,
       home: FootPrintPage(title: title),
@@ -38,8 +63,8 @@ class FootPrintPage extends StatefulWidget {
   State<FootPrintPage> createState() => _FootPrintPageState();
 }
 
-
-class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProviderStateMixin {
+class _FootPrintPageState extends State<FootPrintPage>
+    with SingleTickerProviderStateMixin {
   late TabController controller;
   GeoLocationProvider provider = GeoLocationProvider();
   final _textEditController = TextEditingController();
@@ -64,12 +89,17 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
   }
 
   void setGeoLocationConfig() {
-
-    bg.BackgroundGeolocation.onLocation((bg.Location location) { // 추적될때마다 생성.
+    bg.BackgroundGeolocation.onLocation((bg.Location location) {
+      // 추적될때마다 생성.
       if (provider.db.isOpen) {
-        provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
+        provider.insert(GeoLocation(
+            dateTime: location.timestamp,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude));
       }
-    }, (bg.LocationError error) { print("error : $error"); });
+    }, (bg.LocationError error) {
+      print("error : $error");
+    });
 
     bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
       print('[motionchange] - $location'); // 동작 변환 시 작동
@@ -80,14 +110,14 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
     });
 
     bg.BackgroundGeolocation.ready(bg.Config(
-        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 0,
-        locationUpdateInterval: 1000 * 60,
-        stopOnTerminate: false,
-        startOnBoot: true,
-        debug: true,
-        logLevel: bg.Config.LOG_LEVEL_VERBOSE
-    )).then((bg.State state) {
+            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+            distanceFilter: 0,
+            locationUpdateInterval: 1000 * 60,
+            stopOnTerminate: false,
+            startOnBoot: true,
+            debug: true,
+            logLevel: bg.Config.LOG_LEVEL_VERBOSE))
+        .then((bg.State state) {
       if (!state.enabled) {
         print(" BackgroundGeolocation.ready 시작");
         bg.BackgroundGeolocation.start();
@@ -97,8 +127,7 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    EdgeInsets systemPadding =
-        MediaQuery.of(context).viewPadding;
+    EdgeInsets systemPadding = MediaQuery.of(context).viewPadding;
     double viewHeight =
         (MediaQuery.of(context).size.height - (systemPadding.top)) * 0.1;
     return Scaffold(
@@ -114,21 +143,33 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
         onPressed: () async {
-          LocationClient client = LocationClient();
-          var response = await client.getAddress();
-          print(response);
+          ///
+          ///
+          ///   DEBUG Purpose Only
+          ///
+          ///
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Login()),
+          );
+
+          // LocationClient client = LocationClient();
+          // var response = await client.getAddress();
+          // print(response);
+
           // createSmoothDialog(
-              // context,
-              // "일기 추가 버튼 눌림",
-              // const Text("TODO: 작업 추가"),
-              // TextButton(
-              //   child: const Text("확인"),
-              //   onPressed: () async {
-              //     Navigator.pop(context);
-              //   },
-              // ),
-              // null,
-              // false);
+          // context,
+          // "일기 추가 버튼 눌림",
+          // const Text("TODO: 작업 추가"),
+          // TextButton(
+          //   child: const Text("확인"),
+          //   onPressed: () async {
+          //     Navigator.pop(context);
+          //   },
+          // ),
+          // null,
+          // false);
         },
         elevation: 0,
         backgroundColor: const Color.fromARGB(255, 15, 10, 90),
@@ -139,7 +180,7 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
         ),
       ),
       floatingActionButtonLocation:
-      FloatingActionButtonLocation.miniCenterDocked,
+          FloatingActionButtonLocation.miniCenterDocked,
       bottomNavigationBar: Stack(
         alignment: const FractionalOffset(.5, 1.0),
         children: [
@@ -150,14 +191,15 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
               child: TabBar(
                 indicatorColor: Colors.white,
                 tabs: const <Tab>[
-                Tab(
-                  icon: Icon(Icons.person_add, color: Colors.white),
-                ),
                   Tab(
-                      icon: Icon(
-                        Icons.directions_run,
-                        color: Colors.white,
-                      )),
+                    icon: Icon(Icons.person_add, color: Colors.white),
+                  ),
+                  Tab(
+                    icon: Icon(
+                      Icons.directions_run,
+                      color: Colors.white,
+                    ),
+                  ),
                   Tab(
                     icon: Icon(Icons.edit_note, color: Colors.white),
                   ),
@@ -182,7 +224,7 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
           //     child: Text("Page 2"),
           //   ),
           // ),
-          Diary(),
+          const Diary(),
           Container(
             color: Colors.grey,
             child: const Center(
