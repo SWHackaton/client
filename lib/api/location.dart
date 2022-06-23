@@ -13,7 +13,11 @@ class LocationClient extends APIClient {
     throw Error();
   }
 
-  Future<Response> getLastTimeStamp() {
-    return getRequest('/gps/timeline/last');
+  Future<dynamic> getLastTimeStamp(String user, String date) async {
+    Response response = await getRequest('/gps/timeline?user_id=$user&date=$date');
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(response.bodyBytes));
+    }
+    throw Error();
   }
 }
