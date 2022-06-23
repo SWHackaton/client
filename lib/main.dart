@@ -10,6 +10,7 @@ import 'package:mockup/ui/page/category.dart';
 import 'package:mockup/ui/page/diary.dart';
 import 'package:mockup/ui/page/login.dart';
 import 'package:mockup/ui/page/main.dart';
+import 'package:mockup/ui/page/review-list.dart';
 
 void main() {
   KakaoSdk.init(
@@ -218,19 +219,8 @@ class _FootPrintPageState extends State<FootPrintPage>
         controller: controller,
         children: [
           const MainPage(),
-          // Container(
-          //   color: Colors.green,
-          //   child: const Center(
-          //     child: Text("Page 2"),
-          //   ),
-          // ),
           const Diary(),
-          Container(
-            color: Colors.grey,
-            child: const Center(
-              child: Text("Page 3"),
-            ),
-          ),
+          const ReviewListView(),
           const CategoryPage()
         ],
       ),

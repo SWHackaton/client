@@ -190,7 +190,9 @@ class _MainPageState extends State<MainPage> {
                     context: context,
                     builder: (BuildContext context) => dialog);
               }else
-              {Navigator.push(context,MaterialPageRoute(builder: (context) => DetailView()));}
+              {
+                Navigator.push(context,MaterialPageRoute(builder: (context) => DetailView(storeName, storeAddr, latitude, longitude)));
+              }
             },
           ),
 
