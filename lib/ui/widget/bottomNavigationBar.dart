@@ -41,6 +41,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              const SizedBox(),
               IconButton(
                 onPressed: () {
                   createSmoothDialog(

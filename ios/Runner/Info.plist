@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.transistorsoft.fetch</string>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -50,17 +54,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>NSMotionUsageDescription</key>
-    <string>Motion usage description</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>When in use description</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Always/When in use description</string>
-
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>fetch</string>
-        <string>location</string>
-    </array>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion usage description</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>When in use description</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Always/When in use description</string>
 </dict>
 </plist>

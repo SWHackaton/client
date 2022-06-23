@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class APIClient extends BaseClient {
-  Map<String, String> _defaultHeader = {};
+  Map<String, String> _defaultHeader = {
+    'Content-Type' : 'application/json',
+    'Accept' : 'application/json',
+  };
   final Client _client = Client();
 
-  static const String baseURL = '';
+  static const String baseURL = 'http://118.67.131.34';
 
   @override
   Future<StreamedResponse> send(BaseRequest request) {
