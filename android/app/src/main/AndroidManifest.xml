@@ -6,6 +6,7 @@
         tools:replace="android:label"
         android:label="mockup"
         android:name="${applicationName}"
+       Android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

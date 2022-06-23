@@ -45,6 +45,7 @@ dependencies:
   kakao_flutter_sdk: ^1.1.1
   #  kakao_flutter_sdk_user: ^1.1.1
   timelines: ^0.1.0
+  kakaomap_webview: ^0.6.2
 
 dev_dependencies:
   flutter_test:

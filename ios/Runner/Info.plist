@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSAppTransportSecurity</key>
+      <dict>
+        <key>NSAllowsArbitraryLoads</key> <true/>
+      </dict>
+    <key>io.flutter.embedded_views_preview</key> <true/>
 	<key>KAKAO_APP_KEY</key>
 	<string>7a8c6dda31f8b37746726b69d7a4cc4a</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
