@@ -41,6 +41,7 @@ class FootPrintPage extends StatefulWidget {
 class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProviderStateMixin {
   late TabController controller;
   GeoLocationProvider provider = GeoLocationProvider();
+  final _textEditController = TextEditingController();
 
   @override
   void initState() {
@@ -53,6 +54,7 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
   @override
   void dispose() {
     controller.dispose();
+
     super.dispose();
   }
 
@@ -128,7 +130,7 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
               // false);
         },
         elevation: 0,
-        backgroundColor: const Color.fromARGB(255, 24, 29, 54),
+        backgroundColor: const Color.fromARGB(255, 15, 10, 90),
         tooltip: "새 일기 추가",
         child: const Icon(
           Icons.add,
