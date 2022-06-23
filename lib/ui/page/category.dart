@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:http/http.dart';
+import 'package:mockup/api/store.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
@@ -10,12 +12,10 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryPageState extends State<CategoryPage> {
   TextEditingController _textEditController = TextEditingController();
-  // TextEditingController inputController = TextEditingController();
-
-  // TextEditingController searchData!;
-
+  StoreClient client = StoreClient();
   @override
   void dispose() {
+    super.dispose();
     _textEditController.dispose();
   }
 
@@ -41,14 +41,17 @@ class _CategoryPageState extends State<CategoryPage> {
                 width: 350,
                 child: TextField(
                   controller: _textEditController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.deepPurple)
                     ),
                     labelText: '장소, 버스, 지하철, 도로 등 검색',
                   ),
-                  onChanged: (text){
-                    print("text : $text");
+                  onSubmitted: (text) async {
+                    print("submit text: $text");
+                    var response = await client.getSearchResult(text);
+                    print(response);
+
                   },
                 ),
 
@@ -79,7 +82,10 @@ class _CategoryPageState extends State<CategoryPage> {
                             color: Colors.grey,
                           ),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('meal');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -106,7 +112,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               lightSource: LightSource.topLeft,
                               color: Colors.grey),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('drink');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -133,7 +142,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               lightSource: LightSource.topLeft,
                               color: Colors.grey),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('shopping');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -166,7 +178,10 @@ class _CategoryPageState extends State<CategoryPage> {
                             color: Colors.grey,
                           ),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('culture');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -193,7 +208,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               lightSource: LightSource.topLeft,
                               color: Colors.grey),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('travel');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -220,7 +238,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               lightSource: LightSource.topLeft,
                               color: Colors.grey),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('hotel');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -253,7 +274,10 @@ class _CategoryPageState extends State<CategoryPage> {
                             color: Colors.grey,
                           ),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('subway');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -280,7 +304,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               lightSource: LightSource.topLeft,
                               color: Colors.grey),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('bus');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -307,7 +334,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               lightSource: LightSource.topLeft,
                               color: Colors.grey),
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var response = await client.getSelectCategory('airplane');
+                              print(response);
+                            },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

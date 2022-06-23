@@ -50,6 +50,7 @@ class _MainPageState extends State<MainPage> {
                   nodePosition: 0.3,
                   nodeAlign: TimelineNodeAlign.basic,
                   oppositeContents: Card(
+                    color: NeumorphicColors.background,
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -61,60 +62,6 @@ class _MainPageState extends State<MainPage> {
                   ),
                   node: const TimelineNode(
                     indicator: DotIndicator(),
-                    endConnector: SolidLineConnector(),
-                  ),
-                ),
-                TimelineTile(
-                  nodePosition: 0.3,
-                  nodeAlign: TimelineNodeAlign.basic,
-                  oppositeContents: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('오후 12시 34분'),
-                  ),
-                  contents: Container(
-                    padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    child: Card(
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Wrap(
-                          children: const [
-                            Text("아이디어팩토리"),
-                            Text("서울시 강남구 테헤란로 4길 14 미림타워")
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  node: const TimelineNode(
-                    indicator: DotIndicator(),
-                    startConnector: SolidLineConnector(),
-                    endConnector: SolidLineConnector(),
-                  ),
-                ),
-                TimelineTile(
-                  nodePosition: 0.3,
-                  nodeAlign: TimelineNodeAlign.basic,
-                  oppositeContents: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('오후 12시 34분'),
-                  ),
-                  contents: Container(
-                    padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    child: Card(
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Wrap(
-                          children: const [
-                            Text("아이디어팩토리"),
-                            Text("서울시 강남구 테헤란로 4길 14 미림타워")
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  node: const TimelineNode(
-                    indicator: DotIndicator(),
-                    startConnector: SolidLineConnector(),
                     endConnector: SolidLineConnector(),
                   ),
                 ),
