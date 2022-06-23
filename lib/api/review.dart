@@ -12,4 +12,12 @@ class ReviewClient extends APIClient {
     }
     throw Error();
   }
+
+  Future<dynamic> getReviewAll() async {
+    Response response = await getRequest('/review/');
+    if (response.statusCode == 200) {
+      return jsonDecode(utf8.decode(response.bodyBytes));
+    }
+    throw Error();
+  }
 }
