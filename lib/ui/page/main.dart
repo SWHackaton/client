@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:mockup/ui/page/detailView.dart';
 import 'package:timelines/timelines.dart';
+import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -12,6 +13,9 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   DateTime selectedDate = DateTime.now();
+  var myColor = Colors.black;
+  List<bool> _selections1 = List.generate(2, (index) => false);
+  TextEditingController _textEditController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,8 @@ class _MainPageState extends State<MainPage> {
                   Container(
                     padding: const EdgeInsets.only(bottom: 5),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 24, 29, 54)),
+                      style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(255, 24, 29, 54)),
                       onPressed: () {
                         _selectTime(context, "날짜를 선택하세요.");
                       },
@@ -53,8 +58,8 @@ class _MainPageState extends State<MainPage> {
                   nodeAlign: TimelineNodeAlign.basic,
                   oppositeContents: Card(
                     child: InkWell(
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=>DetailView())),
+                      // onTap: () => Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context)=>DetailView())),
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -73,16 +78,99 @@ class _MainPageState extends State<MainPage> {
                 TimelineTile(
                   nodePosition: 0.3,
                   nodeAlign: TimelineNodeAlign.basic,
-                  oppositeContents: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('오후 12시 34분'),
+                  oppositeContents: Container(
+                    height: 70,
+                    // color: Colors.red,
+                    child: Column(
+                      children: [
+                        Text('오후 12시 34분'),
+                        Container(
+                          // alignment: Alignment.center,
+                          // color: Colors.red,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              // ToggleButtons(
+                              //   children: <Widget>[
+                              //     Icon(Icons.ac_unit),
+                              //     Icon(Icons.call),
+                              //   ],
+                              //   onPressed: (int index) {
+                              //     setState(() {
+                              //       _selections1[index] = !_selections1[index];
+                              //     });
+                              //   },
+                              //   isSelected: _selections1,
+                              // ),
+
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      if (myColor == Colors.black) {
+                                        myColor = Colors.pinkAccent;
+                                      } else
+                                        myColor = Colors.black;
+                                    });
+                                  },
+                                  icon: Icon(Icons.favorite, color: myColor)),
+                              ElevatedButton(
+                                child: Text("add"),
+                                style: ElevatedButton.styleFrom(
+                                    primary: Color.fromARGB(255, 24, 29, 54),
+                                    minimumSize: Size(50, 20)),
+                                onPressed: () {
+                                  AlertDialog dialog = AlertDialog(
+                                    title: Text("Memo"),
+                                    content: TextField(
+                                      controller: _textEditController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.deepPurple)
+                                          ),
+                                          labelText: '장소, 버스, 지하철, 도로 등 검색',
+                                        )
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("저장"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Color.fromARGB(
+                                                220, 24, 29, 54)),
+                                      ),
+                                      ElevatedButton(
+                                        child: Text("취소"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            primary: Color.fromARGB(
+                                                220, 24, 29, 54)),
+                                      ),
+                                    ],
+                                  );
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          dialog);
+                                },
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   contents: Container(
                     padding: const EdgeInsets.only(top: 16, bottom: 16),
                     child: Card(
                       child: InkWell(
-                        onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => DetailView())),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailView())),
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           child: Wrap(

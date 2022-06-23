@@ -5,6 +5,7 @@ import 'package:mockup/api/location.dart';
 import 'package:mockup/db/dao/location.dart';
 import 'package:mockup/db/dto/location.dart';
 import 'package:mockup/ui/dialog/smoothDialog.dart';
+import 'package:mockup/ui/page/diary.dart';
 import 'package:mockup/ui/page/main.dart';
 import 'package:mockup/ui/page/category.dart';
 import 'package:mockup/ui/widget/bottomNavigationBar.dart';
@@ -175,12 +176,13 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
         controller: controller,
         children: [
           const MainPage(),
-          Container(
-            color: Colors.green,
-            child: const Center(
-              child: Text("Page 2"),
-            ),
-          ),
+          // Container(
+          //   color: Colors.green,
+          //   child: const Center(
+          //     child: Text("Page 2"),
+          //   ),
+          // ),
+          Diary(),
           Container(
             color: Colors.grey,
             child: const Center(
