@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:mockup/ui/page/detailView.dart';
 import 'package:timelines/timelines.dart';
 
 class MainPage extends StatefulWidget {
@@ -25,8 +26,9 @@ class _MainPageState extends State<MainPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: NeumorphicButton(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 24, 29, 54)),
                       onPressed: () {
                         _selectTime(context, "날짜를 선택하세요.");
                       },
@@ -57,6 +59,16 @@ class _MainPageState extends State<MainPage> {
                         children: const [
                           Text("오늘의 시작"),
                         ],
+                    child: InkWell(
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (context)=>DetailView())),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: const [
+                            Text("오늘의 시작"),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -3,6 +3,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:http/http.dart';
 import 'package:mockup/api/store.dart';
 
+import 'listView.dart';
+
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
 
@@ -82,6 +84,9 @@ class _CategoryPageState extends State<CategoryPage> {
                             color: Colors.grey,
                           ),
                           child: NeumorphicButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MyListView(),));
+                            },
                             onPressed: () async {
                               var response = await client.getSelectCategory('meal');
                               print(response);
