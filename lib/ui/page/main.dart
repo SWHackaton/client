@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:mockup/api/location.dart';
-import 'package:mockup/ui/page/detailView.dart';
+import 'package:mockup/ui/page/detail-view.dart';
 import 'package:timelines/timelines.dart';
 import 'package:flutter/material.dart';
 
@@ -32,8 +32,7 @@ class _MainPageState extends State<MainPage> {
           child: Container(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context)=>DetailView())),
+              onTap: () => {},
               child: Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -75,7 +74,7 @@ class _MainPageState extends State<MainPage> {
       );
     }
 
-    TimelineTile createTime(String storeTime, dynamic storeName, String storeAddr) {
+    TimelineTile createTime(String storeTime, dynamic storeName, String storeAddr, double latitude, double longitude) {
       return TimelineTile(
         nodePosition: 0.3,
         nodeAlign: TimelineNodeAlign.basic,
@@ -153,7 +152,16 @@ class _MainPageState extends State<MainPage> {
         ),
         contents: Container(
           padding: const EdgeInsets.only(top: 16, bottom: 16),
-          child: Card(
+          child: GestureDetector(
+            onTap: () {
+              if (storeName == null) {
+
+              } else {
+
+              }
+              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailView(storeName, storeAddr, latitude, longitude)));
+            },
+            child: Card(
             child: Container(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -163,7 +171,7 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-          ),
+          ),)
         ),
         node: const TimelineNode(
           indicator: DotIndicator(),
@@ -236,20 +244,20 @@ class _MainPageState extends State<MainPage> {
                                   height: 16,
                                 ),
                                 startTile(),
-                                createTime(storeTime, storeName, storeAddr)
+                                createTime(storeTime, storeName, storeAddr, latitude, longitude)
                               ],
                             );
                           }
                           else if (index == snapshot.data.length - 1) {
                             return Column(
                               children: [
-                                createTime(storeTime, storeName, storeAddr),
+                                createTime(storeTime, storeName, storeAddr, latitude, longitude),
                                 endTile(),
                                 const SizedBox(height: 32),
                               ],
                             );
                           } else {
-                            return createTime(storeTime, storeName, storeAddr);
+                            return createTime(storeTime, storeName, storeAddr, latitude, longitude);
                           }
                         }
                     );
@@ -262,7 +270,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   dynamic getTimeLine() async {
-    return await client.getLastTimeStamp('user02', "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
+    return await client.getLastTimeStamp('user01', "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
   }
 
   void _selectTime(BuildContext context, String title) async {
@@ -271,7 +279,7 @@ class _MainPageState extends State<MainPage> {
       initialDate: selectedDate,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       firstDate: DateTime(1970),
-      lastDate: selectedDate,
+      lastDate: DateTime.now(),
       helpText: title,
       cancelText: "취소",
       confirmText: "확인",
