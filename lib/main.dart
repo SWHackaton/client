@@ -6,16 +6,12 @@ import 'package:mockup/db/dao/location.dart';
 import 'package:mockup/db/dto/location.dart';
 import 'package:mockup/ui/dialog/smoothDialog.dart';
 import 'package:mockup/ui/page/main.dart';
-import 'package:mockup/ui/page/uipage/TimeLinePage.dart';
+import 'package:mockup/ui/page/category.dart';
 import 'package:mockup/ui/widget/bottomNavigationBar.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 void main() {
-<<<<<<< HEAD
-  runApp(MaterialApp(home: MainPage()));
-=======
   runApp(const FootPrint());
->>>>>>> 7b6a97c8968fa957d51d7d3616e06183f468f485
 }
 
 class FootPrint extends StatelessWidget {
@@ -41,17 +37,10 @@ class FootPrintPage extends StatefulWidget {
   State<FootPrintPage> createState() => _FootPrintPageState();
 }
 
-<<<<<<< HEAD
-class _MyHomePageState extends State<MyHomePage> {
-  late GeoLocationProvider provider;
-  late GeoLocation geoLocation;
-  var _latitude;
-  var _longitude;
-=======
+
 class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProviderStateMixin {
   late TabController controller;
   GeoLocationProvider provider = GeoLocationProvider();
->>>>>>> 7b6a97c8968fa957d51d7d3616e06183f468f485
 
   @override
   void initState() {
@@ -72,40 +61,25 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
   }
 
   void setGeoLocationConfig() {
+
     bg.BackgroundGeolocation.onLocation((bg.Location location) { // 추적될때마다 생성.
-<<<<<<< HEAD
-      provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
-      print("@onLocation@ ${provider}");
+      if (provider.db.isOpen) {
+        provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
+      }
     }, (bg.LocationError error) { print("error : $error"); });
 
     bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
       print('[motionchange] - $location'); // 동작 변환 시 작동
-      setState((){
-        _latitude = location.coords.latitude;
-        _longitude = location.coords.longitude;
-
-      });
     });
 
     bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
       print('[providerchange] - $event'); // 권한 변환 시 작동
     });
-=======
-      if (provider.db.isOpen) {
-        provider.insert(GeoLocation(dateTime: location.timestamp, latitude: location.coords.latitude, longitude: location.coords.longitude));
-      }
-    }, (bg.LocationError error) { print(error); });
-
->>>>>>> 7b6a97c8968fa957d51d7d3616e06183f468f485
 
     bg.BackgroundGeolocation.ready(bg.Config(
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
         distanceFilter: 0,
-<<<<<<< HEAD
-        locationUpdateInterval: 5000, //10초에한번씩
-=======
-        locationUpdateInterval: 1000 * 60, //10초에한번씩
->>>>>>> 7b6a97c8968fa957d51d7d3616e06183f468f485
+        locationUpdateInterval: 1000 * 60,
         stopOnTerminate: false,
         startOnBoot: true,
         debug: true,
@@ -117,54 +91,6 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
       }
     });
   }
-
-
-  //
-  // startLocation() {
-  //   provider = GeoLocationProvider();
-  //   provider.open('location');
-  //
-  //   bg.BackgroundGeolocation.onLocation((bg.Location location) {// 추적될때마다 생성.
-  //     print("BackgroundGeolocation.onLocation start");
-  //     provider.insert(GeoLocation(dateTime: location.timestamp,
-  //         latitude: location.coords.latitude,
-  //         longitude: location.coords.longitude));
-  //   }, (bg.LocationError error) {
-  //     print("error : $error");
-  //   });
-  //
-  //   bg.BackgroundGeolocation.onMotionChange((bg.Location location) { //앱이 다시 시작됐을때 수행
-  //     print('[motionchange] - $location'); // 동작 변환 시 작동
-  //     setState(() {
-  //       _latitude = location.coords.latitude;
-  //       _longitude = location.coords.longitude;
-  //     });
-  //   });
-  //
-  //   bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
-  //     print('[providerchange] - $event'); // 권한 변환 시 작동
-  //   });
-  //
-  //   print("BackgroundGeolocation.ready : 시작!");
-  //   bg.BackgroundGeolocation.ready(bg.Config(
-  //       desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-  //       distanceFilter: 0,
-  //       locationUpdateInterval: 5000,
-  //       //10초에한번씩
-  //       stopOnTerminate: false,
-  //       startOnBoot: true,
-  //       debug: true,
-  //       logLevel: bg.Config.LOG_LEVEL_VERBOSE
-  //   )).then((bg.State state) {
-  //     if (!state.enabled) {
-  //       print(" if BackgroundGeolocation.ready 시작");
-  //       bg.BackgroundGeolocation.start();
-  //     }
-  //     else
-  //       print(" else BackgroundGeolocation.ready 시작");
-  //   });
-  // }
-
 
   @override
   Widget build(BuildContext context) {
@@ -209,24 +135,6 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
           color: Colors.white,
         ),
       ),
-<<<<<<< HEAD
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: const CustomBottomNavigationBar(),
-      // body: const MainPage(),
-      body : Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("$_latitude , $_longitude"),
-            TextButton(
-                onPressed: (){
-                  TimeLinePage();
-                },
-                child: Text("push"))
-          ],
-        ),
-      )
-=======
       floatingActionButtonLocation:
       FloatingActionButtonLocation.miniCenterDocked,
       bottomNavigationBar: Stack(
@@ -277,15 +185,9 @@ class _FootPrintPageState extends State<FootPrintPage> with SingleTickerProvider
               child: Text("Page 3"),
             ),
           ),
-          Container(
-            color: Colors.red,
-            child: const Center(
-              child: Text("Page 4"),
-            ),
-          ),
+          const CategoryPage()
         ],
       ),
->>>>>>> 7b6a97c8968fa957d51d7d3616e06183f468f485
     );
   }
 }
