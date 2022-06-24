@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:mockup/api/location.dart';
 import 'package:mockup/ui/page/detail-view.dart';
@@ -15,10 +17,10 @@ class _MainPageState extends State<MainPage> {
   LocationClient client = LocationClient();
   var myColor = Colors.black;
   List<bool> _selections1 = List.generate(2, (index) => false);
-  TextEditingController _textEditController = TextEditingController();
-  final _valueList = ["식당","은행","노래방","카페","마트"];
-  var _selectedValue;
-  dynamic textData = "";
+  List<TextEditingController> textEditControllers = [];
+  List<String> storeNames = [];
+  List<bool> storeLoves = [];
+  List<dynamic> storeColors = [];
   dynamic emptyData = "[장소를 선택해 주세요]";
   // enum MenuType { first, second, third }
 
@@ -77,7 +79,13 @@ class _MainPageState extends State<MainPage> {
       );
     }
 
-    TimelineTile createTime(String storeTime, dynamic storeName, String storeAddr, double latitude, double longitude) {
+    TimelineTile createTime(int index, String storeTime, dynamic storeName, String storeAddr, double latitude, double longitude, List<dynamic> stores, bool love, var visitId, var memo) {
+      storeLoves.add(love);
+      TextEditingController controller = TextEditingController();
+      controller.text = memo ?? '';
+      textEditControllers.add(controller);
+      storeNames.add(storeName ?? stores[0]);
+
       return TimelineTile(
         nodePosition: 0.3,
         nodeAlign: TimelineNodeAlign.basic,
@@ -96,23 +104,20 @@ class _MainPageState extends State<MainPage> {
                     IconButton(
                         onPressed: () {
                           setState(() {
-                            if (myColor == Colors.black) {
-                              myColor = Colors.pinkAccent;
-                            } else {
-                              myColor = Colors.black;
-                            }
+                            storeLoves[index] = !storeLoves[index];
+                            client.getLove(visitId.toString());
                           });
                         },
-                        icon: Icon(Icons.favorite, color: myColor)),
+                        icon: Icon(Icons.favorite, color: storeLoves[index] ? Colors.pink : Colors.black)),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: const Color.fromARGB(255, 24, 29, 54),
-                          minimumSize: const Size(50, 20)),
+                          minimumSize: const Size(30, 20)),
                       onPressed: () {
                         AlertDialog dialog = AlertDialog(
                           title: const Text("Memo"),
                           content: TextField(
-                              controller: _textEditController,
+                              controller: textEditControllers[index],
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(
                                     borderSide:
@@ -125,14 +130,15 @@ class _MainPageState extends State<MainPage> {
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(220, 24, 29, 54)), child: null,
+                                  primary: Color.fromARGB(220, 24, 29, 54)), child: Text('취소'),
                             ),
                             ElevatedButton(
                               onPressed: () {
+                                client.getMemo(visitId.toString(), textEditControllers[index].value.text);
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(220, 24, 29, 54)), child: null,
+                                  primary: Color.fromARGB(220, 24, 29, 54)), child: Text('확인'),
                             ),
                           ],
                         );
@@ -140,7 +146,7 @@ class _MainPageState extends State<MainPage> {
                             context: context,
                             builder: (BuildContext context) => dialog);
                       },
-                      child: const Text("add"),
+                      child: Icon(Icons.edit_note, color: Colors.white),
                     )
                   ],
                 ),
@@ -162,27 +168,25 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            onTap: (){
-              print(textData);
-              if(textData == ""){
+            onTap: () {
+              if(storeName == null){
+                print(stores);
                 AlertDialog dialog = AlertDialog(
                   title: Text("Select"),
                   content: DropdownButton(
                       hint: Text('선택해주세요'),
-                      value: _selectedValue,
-                      items: _valueList.map((value) {
+                      value: stores[0],
+                      items: stores.map((value) {
                         return DropdownMenuItem(
                             value: value,
                             child: Text(value));
                       }).toList(),
                       onChanged: (value) {
-                        print(value);
                         setState(() {
-                          _selectedValue = value;
-                          textData = value;
-                          storeName = value;
-                          emptyData = value;
+                          storeNames[index] = value.toString();
+                          storeName = value.toString();
                         });
+                        client.getStore(visitId.toString(), value.toString());
                         Navigator.of(context).pop();
                       }),
                 );
@@ -255,13 +259,17 @@ class _MainPageState extends State<MainPage> {
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       var timeline = snapshot.data[index];
+                      var visitId = timeline['visit']['visit_id'];
+                      var visitMemo = timeline['visit']['memo'];
                       var storeName = timeline['visit']['store_name'];
                       String storeStart = timeline['visit']['start_datetime'];
                       String storeEnd = timeline['visit']['end_datetime'];
+                      List<dynamic> stores = timeline['store'].where((value) => value['store_name'] != '').map((value) => value['store_name'].toString()).toList();
                       String storeTime = storeStart.substring(11, 16) + " - " + storeEnd.substring(11, 16);
                       String storeAddr = timeline['address']['addr'];
                       double longitude = timeline['address']['longitude'];
                       double latitude = timeline['address']['latitude'];
+                      bool love = timeline['visit']['is_love'];
                       if (index == 0) {
                         return Column(
                           children: [
@@ -269,20 +277,20 @@ class _MainPageState extends State<MainPage> {
                               height: 16,
                             ),
                             startTile(),
-                            createTime(storeTime, storeName, storeAddr, latitude, longitude)
+                            createTime(index, storeTime, storeName, storeAddr, latitude, longitude, stores, love, visitId, visitMemo)
                           ],
                         );
                       }
                       else if (index == snapshot.data.length - 1) {
                         return Column(
                           children: [
-                            createTime(storeTime, storeName, storeAddr, latitude, longitude),
+                            createTime(index, storeTime, storeName, storeAddr, latitude, longitude, stores, love, visitId, visitMemo),
                             endTile(),
                             const SizedBox(height: 32),
                           ],
                         );
                       } else {
-                        return createTime(storeTime, storeName, storeAddr, latitude, longitude);
+                        return createTime(index, storeTime, storeName, storeAddr, latitude, longitude, stores, love, visitId, visitMemo);
                       }
                     }
                 );
@@ -295,7 +303,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   dynamic getTimeLine() async {
-    return await client.getLastTimeStamp('user02',
+    return await client.getLastTimeStamp('user04',
         "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}");
   }
 

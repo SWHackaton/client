@@ -32,12 +32,6 @@ const String KEY_KAKAO_REFRESH_TOKEN = "KakaoRefreshToken";
 const String KEY_KAKAO_REFRESH_TOKEN_EXPIERS_AT = "KakaoRefreshTokenExpiresAt";
 const String KEY_KAKAO_SCOPES = "KakaoScopes";
 
-///
-/// *** 중요 ***
-/// TODO: 앱 실행시 secureStorage에서 로그인값이 유효하다면 자동 로그인, 유효하지 않다몬 로그인 페이지로 넘길것
-/// *** 중요 ***
-///
-
 class FootPrint extends StatelessWidget {
   const FootPrint({Key? key}) : super(key: key);
 
@@ -68,7 +62,7 @@ class _FootPrintPageState extends State<FootPrintPage>
     with SingleTickerProviderStateMixin {
   late TabController controller;
   GeoLocationProvider provider = GeoLocationProvider();
-  final _textEditController = TextEditingController();
+  late String token;
 
   @override
   void initState() {
@@ -81,7 +75,6 @@ class _FootPrintPageState extends State<FootPrintPage>
   @override
   void dispose() {
     controller.dispose();
-
     super.dispose();
   }
 
@@ -91,7 +84,6 @@ class _FootPrintPageState extends State<FootPrintPage>
 
   void setGeoLocationConfig() {
     bg.BackgroundGeolocation.onLocation((bg.Location location) {
-      // 추적될때마다 생성.
       if (provider.db.isOpen) {
         provider.insert(GeoLocation(
             dateTime: location.timestamp,
@@ -100,14 +92,6 @@ class _FootPrintPageState extends State<FootPrintPage>
       }
     }, (bg.LocationError error) {
       print("error : $error");
-    });
-
-    bg.BackgroundGeolocation.onMotionChange((bg.Location location) {
-      print('[motionchange] - $location'); // 동작 변환 시 작동
-    });
-
-    bg.BackgroundGeolocation.onProviderChange((bg.ProviderChangeEvent event) {
-      print('[providerchange] - $event'); // 권한 변환 시 작동
     });
 
     bg.BackgroundGeolocation.ready(bg.Config(
@@ -144,32 +128,10 @@ class _FootPrintPageState extends State<FootPrintPage>
       floatingActionButton: FloatingActionButton(
         // ignore: avoid_print
         onPressed: () async {
-          ///
-          ///
-          ///   DEBUG Purpose Only
-          ///
-          ///
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const Login()),
           );
-
-          // LocationClient client = LocationClient();
-          // var response = await client.getAddress();
-          // print(response);
-
-          // createSmoothDialog(
-          // context,
-          // "일기 추가 버튼 눌림",
-          // const Text("TODO: 작업 추가"),
-          // TextButton(
-          //   child: const Text("확인"),
-          //   onPressed: () async {
-          //     Navigator.pop(context);
-          //   },
-          // ),
-          // null,
           // false);
         },
         elevation: 0,
@@ -193,11 +155,11 @@ class _FootPrintPageState extends State<FootPrintPage>
                 indicatorColor: Colors.white,
                 tabs: const <Tab>[
                   Tab(
-                    icon: Icon(Icons.person_add, color: Colors.white),
+                    icon: Icon(Icons.edit_note, color: Colors.white),
                   ),
                   Tab(
                     icon: Icon(
-                      Icons.directions_run,
+                      Icons.person_search,
                       color: Colors.white,
                     ),
                   ),
@@ -205,7 +167,7 @@ class _FootPrintPageState extends State<FootPrintPage>
                     icon: Icon(Icons.edit_note, color: Colors.white),
                   ),
                   Tab(
-                    icon: Icon(Icons.ac_unit, color: Colors.white),
+                    icon: Icon(Icons.search, color: Colors.white),
                   ),
                 ],
                 controller: controller,

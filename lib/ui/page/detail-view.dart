@@ -88,7 +88,7 @@ class _DetailViewState extends State<DetailView> {
                               scrollDirection: Axis.horizontal,
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                if (snapshot.data[index]['img'] != null) {
+                                if (snapshot.data[index]['img'] != '') {
                                   return SizedBox(
                                     width: 100,
                                     height: 80,
@@ -96,8 +96,9 @@ class _DetailViewState extends State<DetailView> {
                                   );
                                 }
                                 return SizedBox(
-                                    width: 200,
-                                    height: 100
+                                    width: 100,
+                                    height: 80,
+                                  child: Icon(Icons.event_note_outlined),
                                 );
                               }
                           ),
