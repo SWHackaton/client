@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:mockup/api/review.dart';
+
+import 'detail-view.dart';
 
 class CategoryListView extends StatefulWidget {
   final String title;
@@ -15,6 +18,7 @@ class _CategoryListViewState extends State<CategoryListView> {
   final String title;
   final dynamic stores;
   final Icon icon;
+  ReviewClient client = ReviewClient();
   _CategoryListViewState(this.title, this.stores, this.icon);
 
   @override
@@ -39,40 +43,46 @@ class _CategoryListViewState extends State<CategoryListView> {
                 String storeCategory = store['category'];
                 String storeName = store['store_name'];
                 String storeDong = store['dong'];
-            return SizedBox(
-              height: 150,
-              width: 50,
-              child: Card(
-                color: NeumorphicColors.background,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      alignment: Alignment.center,
-                      child: store['img'] == '' ? icon : Image.network(store['img']),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        width: 200,
-                        color: NeumorphicColors.background,
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("종목 : $storeCategory"),
-                              Text("장소 : $storeName"),
-                              Text("위치 : $storeDong"),
-                            ],
+            return GestureDetector(
+              onTap: () async {
+                var response = await client.getReviewDetail(storeName);
+                Navigator.push(context,MaterialPageRoute(builder: (context) => DetailView(response['store'], response['addr'], response['latitude'], response['longitude'])));
+              },
+              child: SizedBox(
+                height: 150,
+                width: 50,
+                child: Card(
+                  color: NeumorphicColors.background,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        alignment: Alignment.center,
+                        child: store['img'] == '' ? icon : Image.network(store['img']),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          width: 200,
+                          color: NeumorphicColors.background,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("종목 : $storeCategory"),
+                                Text("장소 : $storeName"),
+                                Text("위치 : $storeDong"),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
